@@ -2,6 +2,7 @@ package com.example.new1;
 
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +27,9 @@ public class MainActivity extends MapActivity implements OnClickListener {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+      
+        
         
         // 地図とレイアウトを表示
         showMapWithLayout();
@@ -61,8 +65,19 @@ public class MainActivity extends MapActivity implements OnClickListener {
         c.setCenter(new GeoPoint(35665721, 139731006)); //初期表示の地図を指定
         c.setZoom(1);                                 //初期表示の縮尺を指定
 
+
+        GeoPoint mid = new GeoPoint(35665721, 139731006);
+        PinOverlay pinOverlay = new PinOverlay(PinOverlay.PIN_VIOLET);
+        mapView.getOverlays().add(pinOverlay);
+        pinOverlay.addPoint(mid,null);
+        
+        
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
         container.addView(mapView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+   
+        
+    
+    
     }
     
     /**

@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="いわみももこがつくりました" />
+        android:text="いわみももこをほめてあげよう" />
 
     <RatingBar
         android:id="@+id/ratingBar1"
@@ -24,7 +24,7 @@
 
     <Button
         android:id="@+id/button1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="おめでとう" />
 
