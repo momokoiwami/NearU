@@ -72,14 +72,6 @@ public class MainActivity extends MapActivity implements OnClickListener {
         c.setCenter(new GeoPoint(35665721, 139731006)); //初期表示の地図を指定
         c.setZoom(1);                                 //初期表示の縮尺を指定
 
-       MyLocationOverlay mylocationoverlay = new MyLocationOverlay(this, mapView);
-       GeoPoint mylocation = mylocationoverlay.getMyLocation();
-       mylocation.getLatitudeE6();
-//       double lat = mylocation.getLatitude();
-//       double lon = mylocation.getLongitude();
-//       Log.v("lat", lat + "");
-//       Log.v("lon", lon + "");
-//       
         GeoPoint mid = new GeoPoint(35718758, 139732175);
         PinOverlay pinOverlay = new PinOverlay(PinOverlay.PIN_VIOLET);
         mapView.getOverlays().add(pinOverlay);
@@ -99,6 +91,11 @@ public class MainActivity extends MapActivity implements OnClickListener {
                     GeoPoint p = _overlay.getMyLocation();
                     //地図移動
                     mapView.getMapController().animateTo(p);
+                    
+                    double lat = p.getLatitude();
+                    double lon = p.getLongitude();
+
+                    Toast.makeText(getApplicationContext(), "lat: " + lat + ", lon: " + lon, Toast.LENGTH_LONG).show();
                 }
             }
      
