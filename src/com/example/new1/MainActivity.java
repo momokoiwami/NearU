@@ -4,23 +4,48 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import jp.co.yahoo.android.maps.*;
 
    
 public class MainActivity extends MapActivity {
+	
+	private final String mAppId = "dj0zaiZpPUJCWkJyRzl3QUtvOCZzPWNvbnN1bWVyc2VjcmV0Jng9NDU-";
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        showMapWithLayout();
+//        showOnlyMap();
+    }
 
+    /**
+     * 通常のレイアウトと共に地図を表示させる
+     */
+    private void showMapWithLayout() {
+        setContentView(R.layout.activity_main);
+
+        MapView mapView = new MapView(this, mAppId);
+        MapController c = mapView.getMapController();
+        c.setCenter(new GeoPoint(35665721, 139731006)); //初期表示の地図を指定
+        c.setZoom(1);                                 //初期表示の縮尺を指定
+
+        LinearLayout container = (LinearLayout) findViewById(R.id.container);
+        container.addView(mapView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+    
+    /**
+     * 地図だけを表示させる
+     */
+    private void showOnlyMap() {
         MapView mapView = new MapView(this,"dj0zaiZpPUJCWkJyRzl3QUtvOCZzPWNvbnN1bWVyc2VjcmV0Jng9NDU-");
         MapController c = mapView.getMapController();
         c.setCenter(new GeoPoint(35665721, 139731006)); //初期表示の地図を指定
         c.setZoom(1);                                 //初期表示の縮尺を指定
         setContentView(mapView);
-        
     }
 
 
