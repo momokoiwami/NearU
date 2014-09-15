@@ -5,7 +5,12 @@ import java.util.List;
 
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,15 +33,26 @@ public class MainActivity extends MapActivity implements OnClickListener {
 	private Button mButton;
 	private MyLocationOverlay _overlay;
 	
-	
+	// ロケーションマネージャー
+	private LocationManager locationManager;
+
 	
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-      
+        // LocationManagerのインスタンスを取得する（1）
+        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        if ( locationManager == null ) {
+          return;
+        }
+          // メインの処理開始
+          execStart();
+          
         
+
+
         
         // 地図とレイアウトを表示
         showMapWithLayout();
@@ -50,7 +66,53 @@ public class MainActivity extends MapActivity implements OnClickListener {
         mButton.setOnClickListener(this);
     }
     
-    @Override
+ // メイン処理
+    @SuppressLint("NewApi")
+    public void execStart() {
+
+      // プロバイダの選択基準を設定する（2）
+      Criteria criteria = new Criteria();
+      criteria.setBearingRequired(false);  // 方位不要
+      criteria.setSpeedRequired(false);    // 速度不要
+      criteria.setAltitudeRequired(false); // 高度不要
+
+        // 位置情報の更新を要求する（4）
+    	  locationManager.requestSingleUpdate(criteria, new LocationListener() {
+			
+			@Override
+			public void onStatusChanged(String provider, int status, Bundle extras) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onProviderDisabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onLocationChanged(Location location) {
+				// TODO Auto-generated method stub
+				
+				double lat = location.getLatitude();
+				double lon = location.getLongitude();
+				
+				showToast(lat + "");
+				showToast(lon + "");
+			}
+		}, null);
+      }
+     
+    
+
+	@Override
     public void onClick(View v) {
     	switch (v.getId()) {
 		case R.id.button1:
@@ -60,6 +122,10 @@ public class MainActivity extends MapActivity implements OnClickListener {
 			break;
 		}
     }
+	
+	private void showToast(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+	}
 
     /**
      * 通常のレイアウトと共に地図を表示させる
@@ -106,7 +172,7 @@ public class MainActivity extends MapActivity implements OnClickListener {
         
         //Mapの色・デザインを変更。
         List<String> style=new ArrayList<String>();
-        mapView.setMapType(mapView.MapTypeStyle,"base:midnight",style);
+        mapView.setMapType(mapView.MapTypeStyle,"base:standard",style);
         
         
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
