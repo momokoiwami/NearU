@@ -1,5 +1,8 @@
 package com.example.new1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.graphics.drawable.Drawable;
@@ -23,7 +26,11 @@ public class MainActivity extends MapActivity implements OnClickListener {
 
 	private RatingBar mRatingBar;
 	private Button mButton;
-
+	private MyLocationOverlay _overlay;
+	
+	
+	
+	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,16 +67,49 @@ public class MainActivity extends MapActivity implements OnClickListener {
     private void showMapWithLayout() {
         setContentView(R.layout.activity_main);
 
-        MapView mapView = new MapView(this, mAppId);
+        final MapView mapView = new MapView(this, mAppId);
         MapController c = mapView.getMapController();
         c.setCenter(new GeoPoint(35665721, 139731006)); //初期表示の地図を指定
         c.setZoom(1);                                 //初期表示の縮尺を指定
 
-
-        GeoPoint mid = new GeoPoint(35665721, 139731006);
+       MyLocationOverlay mylocationoverlay = new MyLocationOverlay(this, mapView);
+       GeoPoint mylocation = mylocationoverlay.getMyLocation();
+       mylocation.getLatitudeE6();
+//       double lat = mylocation.getLatitude();
+//       double lon = mylocation.getLongitude();
+//       Log.v("lat", lat + "");
+//       Log.v("lon", lon + "");
+//       
+        GeoPoint mid = new GeoPoint(35718758, 139732175);
         PinOverlay pinOverlay = new PinOverlay(PinOverlay.PIN_VIOLET);
         mapView.getOverlays().add(pinOverlay);
         pinOverlay.addPoint(mid,null);
+        
+        //MyLocationOverlayインスタンス作成
+        _overlay = new MyLocationOverlay(getApplicationContext(), mapView);
+     
+        //現在位置取得開始
+        _overlay.enableMyLocation();
+     
+        //位置が更新されると、地図の位置も変わるよう設定
+        _overlay.runOnFirstFix(new Runnable(){
+            public void run() {
+                if (mapView.getMapController() != null) {
+                    //現在位置を取得
+                    GeoPoint p = _overlay.getMyLocation();
+                    //地図移動
+                    mapView.getMapController().animateTo(p);
+                }
+            }
+     
+        });
+     
+        //MapViewにMyLocationOverlayを追加。
+        mapView.getOverlays().add(_overlay);
+        
+        //Mapの色・デザインを変更。
+        List<String> style=new ArrayList<String>();
+        mapView.setMapType(mapView.MapTypeStyle,"base:midnight",style);
         
         
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
